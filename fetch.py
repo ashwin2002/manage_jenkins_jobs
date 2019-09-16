@@ -113,15 +113,23 @@ def main():
     log.info("Preparing report..")
     total_cases = 0
     passed_cases = 0
+    csv_file = open("data/report_%s.csv" % target_build, "w")
+    csv_file.write("Status,Job,Total,Passed\n")
     for component in jobs.keys():
         log.info("Component %s" % component)
         for subcomponent in jobs[component].keys():
+            csv_file.write("%s,%s,%s,%s\n"
+                           % (jobs[component][subcomponent]["RUN_STATUS"],
+                              subcomponent,
+                              jobs[component][subcomponent]["TOTAL"],
+                              jobs[component][subcomponent]["PASSED"]))
             log.info("%8s %s %s" % (jobs[component][subcomponent]["RUN_STATUS"],
                                     subcomponent,
                                     jobs[component][subcomponent]["PASSED"]))
             passed_cases += int(jobs[component][subcomponent]["PASSED"])
             total_cases += int(jobs[component][subcomponent]["TOTAL"])
 
+    csv_file.close()
     pass_percentage = (100 * passed_cases) / total_cases
     log.info("Total: %s" % total_cases)
     log.info("Passed: %s, %2f%%" % (passed_cases, pass_percentage))
