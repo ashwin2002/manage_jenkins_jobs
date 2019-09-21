@@ -37,6 +37,7 @@ def main():
     jenkins_url = jenkins_config.get("URL", "jenkins")
     executor_job = jenkins_config.get("JOBS", "executor")
     target_build = jenkins_config.get("JOBS", "build")
+    target_os = jenkins_config.get("JOBS", "os")
     components = job_config.sections()
 
     executor_jenkins_data.read(executor_job + "_cache.dat")
@@ -71,6 +72,7 @@ def main():
         component = str(description[2])
         subcomponent = str(description[3]).lower()
         build_num = description[0]
+        os_type = str(description[5])
 
         log.debug("Component: %s, subcomponent: %s, description: %s"
                   % (component, subcomponent, description))
@@ -98,6 +100,7 @@ def main():
                 build_data["description"])
 
         if build_num == target_build \
+                and os_type == target_os \
                 and component in components \
                 and subcomponent in jobs[component].keys() \
                 and jobs[component][subcomponent]["RUN_STATUS"] == "NA":
